@@ -52,7 +52,15 @@ Three public benchmarks (DeepMatcher / Magellan versions), using their standard 
 | DBLP-ACM | Research papers | Clean data, nearly solved (control) |
 
 The task is pairwise matching on each benchmark's fixed candidate pairs (not large-scale blocking).
-The data is not stored in this repo; a download script into `data/` is planned.
+The data is not stored in this repo; see "Download the data" below.
+
+| Dataset | Records (A / B) | Train pairs (matches) | Valid pairs (matches) | Test pairs (matches) |
+|---|---|---|---|---|
+| Abt-Buy | 1,081 / 1,092 | 5,743 (616) | 1,916 (206) | 1,916 (206) |
+| Amazon-Google | 1,363 / 3,226 | 6,874 (699) | 2,293 (234) | 2,293 (234) |
+| DBLP-ACM | 2,616 / 2,294 | 7,417 (1,332) | 2,473 (444) | 2,473 (444) |
+
+Note: the DeepMatcher versions are already lowercased and lightly tokenized (e.g. `ipod nano 8gb - silver`).
 
 ## How to run
 
@@ -82,7 +90,19 @@ On macOS / Linux, activate the venv with `source .venv/bin/activate` instead.
 - *GPU:* plain `pip install` on Windows installs the CPU version of torch. For a GPU, first install torch
   using the command for your CUDA version from pytorch.org, then run `pip install -r requirements.txt`.
 
-### 2. View experiment results
+### 2. Download the data
+
+```bat
+python -m src.download_data
+```
+
+This downloads the three DeepMatcher benchmarks from the UW-Madison Magellan group's server into
+`data/abt_buy/`, `data/amazon_google/` and `data/dblp_acm/`. Each folder has `tableA.csv` and `tableB.csv` (the
+records) plus `train.csv`, `valid.csv` and `test.csv` (pairs: `ltable_id, rtable_id, label`, with 1 = match).
+The script checks every file's SHA-256 against the version used in this project and stops if one differs.
+Re-running skips files that already exist; add `--force` to download again.
+
+### 3. View experiment results
 
 Every run is logged with MLflow in the local `mlruns/` folder. To browse runs:
 
@@ -92,9 +112,9 @@ mlflow ui
 
 Then open http://127.0.0.1:5000.
 
-### 3. Run the experiments
+### 4. Run the experiments
 
-Coming soon: data download, baselines (TF-IDF, then `all-MiniLM-L6-v2` embeddings), and the steps to
+Coming soon: baselines (TF-IDF, then `all-MiniLM-L6-v2` embeddings), and the steps to
 reproduce the headline table will be added here as they are built.
 
 ## Repository layout

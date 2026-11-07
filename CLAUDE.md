@@ -5,9 +5,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Project: neural-entity-matcher-failure-analysis. Read this before doing anything in this repo.
 
 ## Current state (2026-11-07)
-Scaffold only: `src/__init__.py` is empty, `notes/*.md` are blank templates. README covers problem, RQs,
-data and setup; its "Run the experiments" section is a placeholder to fill as scripts land.
-There is no data download script, no test suite, no linter config and no entry-point script yet.
+Only code so far: `src/download_data.py`. `notes/*.md` are blank templates. README covers problem, RQs,
+data, setup and download; its "Run the experiments" section is a placeholder to fill as scripts land.
+There is no test suite, no linter config and no matcher/experiment script yet.
 Do not invent commands for these; add them here once they exist.
 
 ## Commands (cmd)
@@ -15,6 +15,7 @@ Do not invent commands for these; add them here once they exist.
 python -m venv .venv
 .venv\Scripts\activate.bat
 pip install -r requirements.txt
+python -m src.download_data    :: fetch the 3 benchmarks into data\ (stdlib only; --force to re-download)
 mlflow ui                      :: view runs stored in .\mlruns at http://127.0.0.1:5000
 ```
 Two dependency files:
@@ -106,6 +107,14 @@ notes/literature.md   papers read + how this work differs
 - Starter failure types (refine during M1): abbreviation / short form (Blk = Black), model or number mismatch
   (XR-55 vs XR55, iPhone 15 vs 15 Pro), missing attribute, near-duplicate but different product, word order / formatting.
 - Taxonomy is weakest with one annotator: besides the self re-tag check, a second annotator on a 100-pair sample is stronger.
+
+## Data layout (from `src/download_data.py`)
+- `data/{abt_buy,amazon_google,dblp_acm}/` each hold `tableA.csv`, `tableB.csv` (column `id` + attributes)
+  and `train.csv`, `valid.csv`, `test.csv` (`ltable_id, rtable_id, label`; join ids to tableA/tableB `id`).
+- Attributes differ: Abt-Buy `name, description, price` (DeepMatcher "Textual"); Amazon-Google
+  `title, manufacturer, price`; DBLP-ACM `title, authors, venue, year`. Prices are often empty.
+- Text is already lowercased/tokenized by DeepMatcher, so case-only failures cannot occur in this data.
+- Files are SHA-256-pinned in the script; a mismatch means upstream changed and results are not comparable.
 
 ## M1 starting defaults (suggestions, not fixed decisions)
 - Baseline 1: TF-IDF + cosine similarity, threshold tuned on the validation split.
