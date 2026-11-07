@@ -5,7 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Project: neural-entity-matcher-failure-analysis. Read this before doing anything in this repo.
 
 ## Current state (2026-11-07)
-Scaffold only: `src/__init__.py` is empty, `notes/*.md` are blank templates, README is two lines.
+Scaffold only: `src/__init__.py` is empty, `notes/*.md` are blank templates. README covers problem, RQs,
+data and setup; its "Run the experiments" section is a placeholder to fill as scripts land.
 There is no data download script, no test suite, no linter config and no entry-point script yet.
 Do not invent commands for these; add them here once they exist.
 
